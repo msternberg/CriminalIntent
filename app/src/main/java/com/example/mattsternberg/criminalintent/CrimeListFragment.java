@@ -20,16 +20,14 @@ import java.util.UUID;
  */
 public class CrimeListFragment extends Fragment {
 
-    //used to get the crime id for notifyItemChanged()
-    private final int CRIME_ITEM_KEY = 0;
-
     private RecyclerView mCrimeRecyclerView;
     private CrimeAdapter mAdapter;
-    private UUID crimeToUpdate;
+    private int lastPosition;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
          Bundle savedInstanceState) {
+        lastPosition = -1;
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
 
         mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.crime_recycler_view);
@@ -54,7 +52,7 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.notifyDataSetChanged();
+            mAdapter.notifyItemChanged(lastPosition);
         }
     }
 
@@ -87,6 +85,7 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Intent intent =  CriminalActivity.newIntent(getActivity(), mCrime.getId());
+            lastPosition = getAdapterPosition();
             startActivity(intent);
         }
 
