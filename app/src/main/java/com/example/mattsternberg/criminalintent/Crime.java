@@ -1,6 +1,8 @@
 package com.example.mattsternberg.criminalintent;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -46,5 +48,10 @@ public class Crime {
 
     public void setSolved(boolean solved) {
         mSolved = solved;
+    }
+
+    public String friendlyDateFormat() {
+        DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.FULL, Locale.US);
+        return dateFormatter.format(mDate);
     }
 }
