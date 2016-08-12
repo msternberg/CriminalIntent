@@ -17,6 +17,7 @@ public class Crime {
 
     public Crime() {
         //Generate Unique Identifier
+        mTitle = "";
         mId = UUID.randomUUID();
         mDate = new Date();
 
@@ -53,5 +54,10 @@ public class Crime {
     public String friendlyDateFormat() {
         DateFormat dateFormatter = DateFormat.getDateInstance(DateFormat.FULL, Locale.US);
         return dateFormatter.format(mDate);
+    }
+
+    public String friendlyTimeFormat() {
+        DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.US);
+        return timeFormatter.format(mDate);
     }
 }
