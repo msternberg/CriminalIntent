@@ -16,11 +16,13 @@ public class Crime {
     private boolean mSolved;
 
     public Crime() {
-        //Generate Unique Identifier
-        mTitle = "";
-        mId = UUID.randomUUID();
-        mDate = new Date();
+        this(UUID.randomUUID());
+    }
 
+    public Crime(UUID id) {
+        mTitle = "";
+        mId = id;
+        mDate = new Date();
     }
 
     public UUID getId() {

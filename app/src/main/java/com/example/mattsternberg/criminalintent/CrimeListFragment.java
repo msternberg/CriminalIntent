@@ -31,7 +31,6 @@ public class CrimeListFragment extends Fragment {
     private TextView mCrimeEmptyText;
     private Button mCrimeEmptyButton;
     private CrimeAdapter mAdapter;
-    private int lastPosition;
     private boolean mSubtitleVisible;
 
     @Override
@@ -42,7 +41,6 @@ public class CrimeListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
          Bundle savedInstanceState) {
-        lastPosition = -1;
         View view = inflater.inflate(R.layout.fragment_crime_list, container, false);
 
         mCrimeRecyclerView = (RecyclerView) view.findViewById(R.id.crime_recycler_view);
@@ -123,7 +121,8 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.notifyItemChanged(lastPosition);
+            mAdapter.setCrimes(crimes);
+            mAdapter.notifyDataSetChanged();
         }
 
         if (crimes.isEmpty()) {
@@ -182,7 +181,6 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Intent intent =  CrimePagerActivity.newIntent(getActivity(), mCrime.getId());
-            lastPosition = getAdapterPosition();
             startActivity(intent);
         }
 
@@ -212,6 +210,10 @@ public class CrimeListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mCrimes.size();
+        }
+
+        public void setCrimes(List<Crime> crimes) {
+            mCrimes = crimes;
         }
     }
 }
