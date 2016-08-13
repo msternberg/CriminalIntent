@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.example.mattsternberg.criminalintent.database.CrimeBaseHelper;
 import com.example.mattsternberg.criminalintent.database.CrimeCursorWrapper;
@@ -84,13 +85,13 @@ public class CrimeLab {
     }
 
     public boolean removeCrime(Crime c) {
-//        for (int i = 0; i < mCrimes.size(); i++) {
-//            if (c.getId().equals(mCrimes.get(i).getId())) {
-//                mCrimes.remove(i);
-//                return true;
-//            }
-//        }
-        return false;
+        try {
+            mDatabase.delete(CrimeTable.NAME, CrimeTable.Cols.UUID + " = ?",
+                    new String[] {c.getId().toString()});
+            return true;
+        } catch(Exception e) {
+            return false;
+        }
     }
 
     private static ContentValues getContentValues(Crime crime) {
