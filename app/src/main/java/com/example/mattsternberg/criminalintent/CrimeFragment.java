@@ -188,9 +188,17 @@ public class CrimeFragment extends Fragment {
                                 null, CommonDataKinds.Phone.CONTACT_ID + " = ?"
                                 , new String[] { mSuspectId }, null);
                 c.moveToFirst();
-                String phoneNumber = c.getString(c.getColumnIndex(CommonDataKinds.Phone.NUMBER));
-                Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
-                startActivity(i);
+
+                try {
+                    if (c.getCount() == 0) {
+                        return;
+                    }
+                    String phoneNumber = c.getString(c.getColumnIndex(CommonDataKinds.Phone.NUMBER));
+                    Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+                    startActivity(i);
+                } finally {
+                    c.close();
+                }
 
             }
         });
