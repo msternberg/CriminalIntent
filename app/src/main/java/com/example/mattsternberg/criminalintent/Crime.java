@@ -71,4 +71,8 @@ public class Crime {
         DateFormat timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.US);
         return timeFormatter.format(mDate);
     }
+
+    public String getPhotoFilename() {
+        return "IMG_" + getId().toString() + ".jpg";
+    }
 }
