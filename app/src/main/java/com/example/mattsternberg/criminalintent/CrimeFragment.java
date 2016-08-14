@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ShareCompat;
@@ -24,10 +25,8 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import java.sql.Time;
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -50,6 +49,8 @@ public class CrimeFragment extends Fragment {
     private CheckBox mSolvedCheckBox;
     private Button mReportButton;
     private Button mSuspectButton;
+    private Button mCallButton;
+    private String mSuspectId;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -178,6 +179,22 @@ public class CrimeFragment extends Fragment {
             mSuspectButton.setEnabled(false);
         }
 
+        mCallButton = (Button) v.findViewById(R.id.phone_suspect);
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cursor c = getActivity().getContentResolver()
+                        .query(CommonDataKinds.Phone.CONTENT_URI,
+                                null, CommonDataKinds.Phone.CONTACT_ID + " = ?"
+                                , new String[] { mSuspectId }, null);
+                c.moveToFirst();
+                String phoneNumber = c.getString(c.getColumnIndex(CommonDataKinds.Phone.NUMBER));
+                Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+                startActivity(i);
+
+            }
+        });
+
         return v;
     }
 
@@ -202,7 +219,8 @@ public class CrimeFragment extends Fragment {
             // Specify which fields you want your query to return
             // values for
             String[] queryFields = new String[] {
-                    ContactsContract.Contacts.DISPLAY_NAME
+                    ContactsContract.Contacts.DISPLAY_NAME,
+                    ContactsContract.Contacts._ID
             };
             // Perform your query -- the contactUri is like a "where"
             // clause here
@@ -218,6 +236,7 @@ public class CrimeFragment extends Fragment {
                 // that is your suspect's name
                 c.moveToFirst();
                 String suspect = c.getString(0);
+                mSuspectId = c.getString(1);
                 mCrime.setSuspect(suspect);
                 mSuspectButton.setText(suspect);
             } finally {
